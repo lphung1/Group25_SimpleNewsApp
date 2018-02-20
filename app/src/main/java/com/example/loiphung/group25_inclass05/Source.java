@@ -5,11 +5,9 @@ package com.example.loiphung.group25_inclass05;
  */
 
 public class Source {
-    String id, name;
+    public String id, name;
 
-    public Source(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public Source() {
     }
 
     public String getId() {

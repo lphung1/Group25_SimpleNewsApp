@@ -1,5 +1,6 @@
 package com.example.loiphung.group25_inclass05;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,71 +29,105 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static ArrayList<String> newsArrayList = new ArrayList<String>();
+    public static ArrayList<Source> newsArrayList = new ArrayList<Source>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("News Sites");
-        new GetDataAsync().execute("https://newsapi.org/v2/top-headlines?' +\n" +
-                "          'country=us&' +\n" +
-                "          'apiKey=b2c985005ade4ecdab27c1abace702a8");
 
-/*
-        findViewById(R.id.checkConnectionButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if (isConnected()){
+            //https://newsapi.org/v1/sources/
+            //https://newsapi.org/v2/top-headlines?country=us&apiKey=b2c985005ade4ecdab27c1abace702a8
+            new GetDataAsync(this).execute("https://newsapi.org/v1/sources/");
+        }
+        else{
+            Toast.makeText(this, "Not connected to the internet", Toast.LENGTH_LONG).show();
+        }
 
-                if(isConnected()) {
-                    Toast.makeText(MainActivity.this, "Internet Present", Toast.LENGTH_SHORT).show();
-                    new GetDataAsync().execute("https://newsapi.org/v1/sources");
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        Log.d("Name", ""+ newsArrayList);
 
-*/
 
-    }
-    private class GetDataAsync extends AsyncTask<String, Void, String> {
+
+
+
+
+
+    } //end of oncreate
+
+    private class GetDataAsync extends AsyncTask<String, Void, ArrayList<Source> > {
+
+        private ProgressDialog dialog;
+
+        public GetDataAsync(MainActivity activity) {
+            dialog = new ProgressDialog(activity);
+        }
+
         @Override
-        protected String doInBackground(String... params) {
+        protected void onPreExecute() {
+            dialog.setMessage("Loading sources");
+            dialog.show();
+        }
+
+
+
+        @Override
+        protected ArrayList<Source> doInBackground(String... params) {
             HttpURLConnection connection = null;
-            String result = null;
+            ArrayList<Source> result = new ArrayList<>();
             try {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    result = IOUtils.toString(connection.getInputStream(), "UTF-8");
+                    String json = IOUtils.toString(connection.getInputStream(), "UTF8");
+
+                    JSONObject root = new JSONObject(json);
+                    JSONArray sources = root.getJSONArray("sources");
+                    for (int i = 0; i < sources.length(); i++) {
+                        JSONObject sourceJson = sources.getJSONObject(i);
+                        Source source = new Source();
+                        source.name = sourceJson.getString("name");
+                        source.id = sourceJson.getString("id");
+
+                        Log.d("Name", "" + sourceJson.getString("name"));
+                        Log.d("Name", "" + sourceJson.getString("id"));
+
+                        //JSONObject addressJson = sourceJson.getJSONObject("address");
+
+                    /*
+                    Address address = new Address();
+                    address.line1 = addressJson.getString("line1");
+                    address.city = addressJson.getString("city");
+                    address.state = addressJson.getString("state");
+                    address.zip = addressJson.getString("zip");
+
+                    source.address = address;
+                    */
+
+                        MainActivity.newsArrayList.add(source);
+                    }
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                //Handle Exceptions
             } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
+                //Close the connections
             }
             return result;
         }
 
-        @Override
+
         protected void onPostExecute(String result) {
-            if (result != null) {
-                Log.d("demo", result);
-            } else {
-                Log.d("demo", "null result");
+            if (dialog.isShowing()) {
+                dialog.dismiss();
             }
+
         }
     }
 
 
-    private boolean isConnected() {
+    private boolean isConnected(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
@@ -105,4 +140,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-}
+
+
+}//end of mainactivity
+
+
+
+
