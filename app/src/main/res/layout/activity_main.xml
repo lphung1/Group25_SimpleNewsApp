@@ -11,5 +11,8 @@
         android:id="@+id/LinearLayout_Main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"></ListView>
+        android:orientation="vertical">
+
+    </ListView>
+
 </RelativeLayout>
