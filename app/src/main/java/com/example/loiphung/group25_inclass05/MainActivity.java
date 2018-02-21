@@ -43,13 +43,11 @@ public class MainActivity extends AppCompatActivity {
         if (isConnected()){
             //https://newsapi.org/v1/sources/
             //https://newsapi.org/v2/top-headlines?country=us&apiKey=b2c985005ade4ecdab27c1abace702a8
-            new GetDataAsync(this).execute("https://newsapi.org/v1/sources/");
+            new GetDataAsync(this).execute("https://newsapi.org/v2/top-headlines?country=us&apiKey=b2c985005ade4ecdab27c1abace702a8");
         }
         else{
             Toast.makeText(this, "Not connected to the internet", Toast.LENGTH_LONG).show();
         }
-
-        Log.d("news Array List", ""+ newsArrayList);
 
 
         /*
@@ -89,22 +87,31 @@ public class MainActivity extends AppCompatActivity {
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     String json = IOUtils.toString(connection.getInputStream(), "UTF8");
 
+
                     JSONObject root = new JSONObject(json);
-                    JSONArray sources = root.getJSONArray("sources");
-                    for (int i = 0; i < sources.length(); i++) {
-                        JSONObject sourceJson = sources.getJSONObject(i);
-                        Source source = new Source();
-                        source.setName(sourceJson.getString("name"));
-                        source.setId(sourceJson.getString("id"));
-                        source.setDescription(sourceJson.getString("description"));
-                        source.setUrl(sourceJson.getString("url"));
 
-                        Log.d("JsonName", "" + sourceJson.getString("name"));
-                        Log.d("Jsonid", "" + sourceJson.getString("id"));
+                    JSONArray articles = root.optJSONArray("articles");
 
+                    for (int i = 0; i < articles.length(); i++) {
+                        JSONObject articlesJSONObject = articles.optJSONObject(i);
+                        JSONObject sourceJsonObject = articlesJSONObject.optJSONObject("source");
 
+                        Source s = new Source();
+                        Article a = new Article();
 
-                        result.add(source);
+                        s.setName(sourceJsonObject.optString("name"));
+                        s.setId(sourceJsonObject.optString("id"));
+                        a.setDescription(articlesJSONObject.getString("description"));
+                        a.setUrl(articlesJSONObject.optString("url"));
+                        a.setTitle(articlesJSONObject.optString("title"));
+                        a.setAuthor(articlesJSONObject.optString("author"));
+                        a.setUrlToImage(articlesJSONObject.optString("urlToImage"));
+                        a.setDate(articlesJSONObject.optString("publishedAt"));
+                        Log.d("JsonName", "" + sourceJsonObject.getString("name"));
+                        Log.d("Jsonid", "" + sourceJsonObject.getString("id"));
+
+                        s.article = a;
+                        result.add(s);
                     }
                 }
             } catch (Exception e) {
@@ -123,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             final ArrayList<Source> thisSource = result;
+            MainActivity.newsArrayList = result;
 
             Log.d("news Array List", ""+ result);
 
@@ -137,16 +145,10 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, SecondActivity.class);
 
 
-
-
-
                     Source s = thisSource.get(position);
                     Log.d("s item", "" + s);
                     intent.putExtra("description", s.getDescription() );
                     intent.putExtra("url", s.getUrl());
-
-
-
 
                     startActivity(intent);
                 }

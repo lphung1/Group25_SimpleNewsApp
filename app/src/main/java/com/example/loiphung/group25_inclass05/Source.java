@@ -6,8 +6,10 @@ package com.example.loiphung.group25_inclass05;
 
 public class Source {
     public String id, name, url, description;
+    public Article article;
 
     public Source() {
+
     }
 
     public String getId() {
@@ -40,5 +42,13 @@ public class Source {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
 }

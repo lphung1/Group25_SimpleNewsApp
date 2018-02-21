@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class SecondActivity extends AppCompatActivity {
@@ -14,28 +15,19 @@ public class SecondActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        setTitle("Description");
+        setTitle("Articles");
 
-        Intent i = getIntent();
-        String description = i.getExtras().getString("description");
-        final String url = i.getExtras().getString("url");
+        ListView listView = findViewById(R.id.second_listview);
+        CustomArticleAdapter adapter = new CustomArticleAdapter(SecondActivity.this, R.layout.news_row, MainActivity.newsArrayList);
+        listView.setAdapter(adapter);
 
-        Log.d("Description", ""+ description);
-        Log.d("url", ""+ url);
+        //Log.d("Description", ""+ description);
+        //Log.d("url", ""+ url);
 
-        TextView textView = findViewById(R.id.descriptionText);
-        textView.setText(description);
+        TextView textView = findViewById(R.id.articleTitleDescription_textview);
+        //textView.setText(description);
 
-        findViewById(R.id.gotoUrlButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Uri uri = Uri.parse(url);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-
-            }
-        });
 
 
 

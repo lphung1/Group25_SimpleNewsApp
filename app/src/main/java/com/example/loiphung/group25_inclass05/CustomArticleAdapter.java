@@ -10,25 +10,26 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by LoiPhung on 2/19/18.
+ * Created by LoiPhung on 2/20/18.
  */
 
-public class CustomSourceAdapter extends ArrayAdapter<Source> {
 
-    public CustomSourceAdapter(Context context, int resource, ArrayList<Source> objects) {
+public class CustomArticleAdapter extends ArrayAdapter<Source> {
+
+    public CustomArticleAdapter(Context context, int resource, ArrayList<Source> objects) {
         super(context, resource, objects);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Source source = this.getItem(position);
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.news_row, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.article_row, parent, false);
 
-        TextView sourceName = convertView.findViewById(R.id.newsText);
-
+        TextView sourceName = convertView.findViewById(R.id.articleTitleDescription_textview);
+        View imageView = convertView.findViewById(R.id.article_image_view);
 
         //set the data from the email object
-        sourceName.setText(source.getName());
+        sourceName.setText(source.getArticle().toString());
 
         return convertView;
     }
