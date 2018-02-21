@@ -8,11 +8,8 @@
     tools:context="com.example.loiphung.group25_inclass05.MainActivity">
 
     <ListView
-        android:id="@+id/LinearLayout_Main"
+        android:id="@+id/ListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    </ListView>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

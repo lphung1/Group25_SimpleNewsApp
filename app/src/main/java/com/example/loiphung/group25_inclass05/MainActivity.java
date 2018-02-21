@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("News Sites");
 
+
         if (isConnected()){
             //https://newsapi.org/v1/sources/
             //https://newsapi.org/v2/top-headlines?country=us&apiKey=b2c985005ade4ecdab27c1abace702a8
@@ -46,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Not connected to the internet", Toast.LENGTH_LONG).show();
         }
 
-        Log.d("Name", ""+ newsArrayList);
-
-
-
+        Log.d("news Array List", ""+ newsArrayList);
+        /*
+        ListView listView = findViewById(R.id.ListView);
+        CustomSourceAdapter adapter = new CustomSourceAdapter(this, R.layout.news_row, newsArrayList);
+        listView.setAdapter(adapter);
+        */
 
 
 
@@ -71,11 +74,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         @Override
         protected ArrayList<Source> doInBackground(String... params) {
             HttpURLConnection connection = null;
-            ArrayList<Source> result = new ArrayList<>();
+            ArrayList<Source> result = new ArrayList<Source>();
             try {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
@@ -88,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < sources.length(); i++) {
                         JSONObject sourceJson = sources.getJSONObject(i);
                         Source source = new Source();
-                        source.name = sourceJson.getString("name");
-                        source.id = sourceJson.getString("id");
+                        source.setName(sourceJson.getString("name"));
+                        source.setId(sourceJson.getString("id"));
 
-                        Log.d("Name", "" + sourceJson.getString("name"));
-                        Log.d("Name", "" + sourceJson.getString("id"));
+                        Log.d("JsonName", "" + sourceJson.getString("name"));
+                        Log.d("Jsonid", "" + sourceJson.getString("id"));
 
                         //JSONObject addressJson = sourceJson.getJSONObject("address");
 
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     source.address = address;
                     */
 
-                        MainActivity.newsArrayList.add(source);
+                        result.add(source);
                     }
                 }
             } catch (Exception e) {
@@ -117,11 +119,21 @@ public class MainActivity extends AppCompatActivity {
             return result;
         }
 
+        protected void onPostExecute(ArrayList<Source> result) {
 
-        protected void onPostExecute(String result) {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
+
+
+
+            Log.d("news Array List", ""+ result);
+
+            ListView listView = findViewById(R.id.ListView);
+            CustomSourceAdapter adapter = new CustomSourceAdapter(MainActivity.this, R.layout.news_row, result);
+            listView.setAdapter(adapter);
+
+
 
         }
     }
