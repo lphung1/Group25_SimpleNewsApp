@@ -2,6 +2,7 @@ package com.example.loiphung.group25_inclass05;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d("news Array List", ""+ newsArrayList);
+
+
         /*
         ListView listView = findViewById(R.id.ListView);
         CustomSourceAdapter adapter = new CustomSourceAdapter(this, R.layout.news_row, newsArrayList);
@@ -92,21 +96,13 @@ public class MainActivity extends AppCompatActivity {
                         Source source = new Source();
                         source.setName(sourceJson.getString("name"));
                         source.setId(sourceJson.getString("id"));
+                        source.setDescription(sourceJson.getString("description"));
+                        source.setUrl(sourceJson.getString("url"));
 
                         Log.d("JsonName", "" + sourceJson.getString("name"));
                         Log.d("Jsonid", "" + sourceJson.getString("id"));
 
-                        //JSONObject addressJson = sourceJson.getJSONObject("address");
 
-                    /*
-                    Address address = new Address();
-                    address.line1 = addressJson.getString("line1");
-                    address.city = addressJson.getString("city");
-                    address.state = addressJson.getString("state");
-                    address.zip = addressJson.getString("zip");
-
-                    source.address = address;
-                    */
 
                         result.add(source);
                     }
@@ -126,12 +122,35 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
+            final ArrayList<Source> thisSource = result;
 
             Log.d("news Array List", ""+ result);
 
             ListView listView = findViewById(R.id.ListView);
             CustomSourceAdapter adapter = new CustomSourceAdapter(MainActivity.this, R.layout.news_row, result);
             listView.setAdapter(adapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView adapterView, View view, int position, long l) {
+                    Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+
+
+
+
+
+                    Source s = thisSource.get(position);
+                    Log.d("s item", "" + s);
+                    intent.putExtra("description", s.getDescription() );
+                    intent.putExtra("url", s.getUrl());
+
+
+
+
+                    startActivity(intent);
+                }
+            });
 
 
 
