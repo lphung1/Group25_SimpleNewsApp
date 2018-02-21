@@ -7,6 +7,7 @@ package com.example.loiphung.group25_inclass05;
 public class Article {
 
     String author, title, url, description, urlToImage, date = null;
+    int pictureID;
 
     public Article() {
     }
@@ -62,5 +63,13 @@ public class Article {
     @Override
     public String toString() {
         return getTitle() + "\n" +getAuthor() + "\n" + getDate();
+    }
+
+    public int getPictureID() {
+        return pictureID;
+    }
+
+    public void setPictureID(int pictureID) {
+        this.pictureID = pictureID;
     }
 }
