@@ -34,12 +34,10 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
                 String url = MainActivity.newsArrayList.get(position).getArticle().getUrl();
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
-
 
             }
         });

@@ -6,7 +6,7 @@ package com.example.loiphung.group25_inclass05;
 
 public class Source {
     public String id, name, url, description;
-    public Article article;
+    public Article article = null;
 
     public Source() {
 
@@ -26,22 +26,6 @@ public class Source {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Article getArticle() {

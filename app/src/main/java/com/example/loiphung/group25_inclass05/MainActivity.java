@@ -6,25 +6,19 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -105,12 +99,15 @@ public class MainActivity extends AppCompatActivity {
                         a.setUrl(articlesJSONObject.optString("url"));
                         a.setTitle(articlesJSONObject.optString("title"));
                         a.setAuthor(articlesJSONObject.optString("author"));
-                        a.setUrlToImage(articlesJSONObject.optString("urlToImage"));
+                        if(articlesJSONObject.optString("urlToImage").startsWith("https"))
+                        {
+                            a.setUrlToImage(articlesJSONObject.optString("urlToImage"));
+                        }
                         a.setDate(articlesJSONObject.optString("publishedAt"));
                         Log.d("JsonName", "" + sourceJsonObject.getString("name"));
                         Log.d("Jsonid", "" + sourceJsonObject.getString("id"));
 
-                        s.article = a;
+                        s.setArticle(a);
                         result.add(s);
                     }
                 }
@@ -147,8 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Source s = thisSource.get(position);
                     Log.d("s item", "" + s);
-                    intent.putExtra("description", s.getDescription() );
-                    intent.putExtra("url", s.getUrl());
+                    intent.putExtra("picture", s.getArticle().getUrlToImage());
 
                     startActivity(intent);
                 }

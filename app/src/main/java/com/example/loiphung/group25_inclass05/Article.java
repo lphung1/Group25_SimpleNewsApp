@@ -10,8 +10,8 @@ public class Article {
     int pictureID;
 
     public Article() {
+        this.urlToImage = "http://www.freeiconspng.com/uploads/no-image-icon-6.png";
     }
-
     public String getAuthor() {
         return author;
     }
